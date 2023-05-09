@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add</title>
+</head>
+<body>
+<header>
+  <div class="header_wrapper">
+    <div class="left"><a href=""><h1>CourseWork.com</h1></a></div>
+    <div class="right">
+      <div class="button">
+        <form action="">
+          <input type="submit" value="Log in">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="adding">
+  <div th:each="curse : ${curs}">
+  <form method="post">
+    <input type="text" th:value="${curse.name}" name="moneyName" placeholder="введіть назву валюти">
+    <input type="text" th:value="${curse.currentDollarCurrency}" name="DollarCurrency" placeholder="введіть курс Валюти до доллара">
+    <input type="submit" value="змінити">
+  </form>
+  </div>
+</div>
+</body>
+</html>

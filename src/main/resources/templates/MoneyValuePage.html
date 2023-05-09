@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>головна сторінка</title>
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
+</head>
+<body>
+<header>
+    <div class="header_wrapper">
+        <div class="left"><a href=""><h1>CourseWork.com</h1></a></div>
+        <div class="right">
+            <div class="button">
+                <form action="">
+                    <input type="submit" value="Log in">
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+<table border="double">
+        <div th:each="el : ${OtherValues}">
+            <tr>
+                <td><p th:text="'курс за 1 '+ ${el.name}"/> </td>
+            <div th:each="curse : ${curs}">
+                <td><p th:text="${curse.currentDollarCurrency / el.currentDollarCurrency}"></p></td>
+
+            </div>
+            </tr>
+        </div>
+</table>
+<div th:each="curse : ${curs}">
+    <a th:href="'/MoneyValuePage/'+ ${curse.id}+'/edit'" ><input type="submit" value="змінити"></a>
+    <form th:action="'/MoneyValuePage/'+${curse.id}+'/remove'" method="post">
+        <button type="submit">видалити</button>
+    </form>
+    <form th:action="'/MoneyValuePage/'+${curse.id}+'/history'">
+        <button type="submit">подивитися історію курсів</button>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Історія</title>
+</head>
+<body>
+<table border="double">
+    <td th:text="Дата"></td>
+    <td th:text="курс"></td>
+    <td th:text="назва"></td>
+<!-- Відображення відфільтрованих даних у таблиці -->
+<tr th:each="data : ${filteredData}">
+    <td th:text="${data.getDate()}"></td>
+    <td th:text="${data.getRate()}"></td>
+    <td th:text="${data.getCurrencyCode()}"></td>
+    <!-- Додайте інші потрібні стовпці данних -->
+</tr>
+</table>
+</body>
+</html>
