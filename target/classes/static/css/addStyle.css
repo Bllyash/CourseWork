@@ -1,0 +1,39 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(252, 234, 215);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.adding {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.adding form {
+    text-align: center;
+    display: block;
+}
+
+.adding form input{
+    width: 500px;
+    height: 50px;
+    margin: 5px;
+    font-size: 18pt;
+    font-family: 'Courier New', Courier, monospace;
+    border: 2px solid black;
+}
+
+.button{
+    background-color: lightgoldenrodyellow;
+}
+.adding form input.button{
+    width: 200px;
+}
+.adding form input.button:hover{
+    cursor: pointer;
+    opacity: 0.5;
+
+}

@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Історія</title>
+    <link rel="stylesheet" th:href="@{/css/HistoryStyle.css}">
 </head>
 <body>
+<div class="wrapper">
+<h1 th:text="${cursName}"></h1>
 <table border="double">
-    <td th:text="Дата"></td>
-    <td th:text="курс"></td>
-    <td th:text="назва"></td>
-<!-- Відображення відфільтрованих даних у таблиці -->
-<tr th:each="data : ${filteredData}">
-    <td th:text="${data.getDate()}"></td>
-    <td th:text="${data.getRate()}"></td>
-    <td th:text="${data.getCurrencyCode()}"></td>
-    <!-- Додайте інші потрібні стовпці данних -->
-</tr>
+    <tr>
+        <td class="name">Дата</td>
+        <td th:each="data : ${filteredData}" th:text="${data.date}"></td>
+    </tr>
+    <tr th:each="otherValue : ${otherValues}">
+        <td class="name" th:text="'курс за 1 ' + ${otherValue.name}"></td>
+        <td th:each="histValue1 : ${otherValuesHist}"   th:if="${histValue1.getCurrencyCode() == otherValue.getName()}">
+            <span th:each="data : ${filteredData}" th:text="${data.getRate()/ histValue1.getRate()}" th:if="${data.getDate()==histValue1.getDate()}"></span>
+        </td>
+    </tr>
 </table>
+</div>
 </body>
 </html>

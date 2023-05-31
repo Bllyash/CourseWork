@@ -13,7 +13,12 @@
         <div class="left"><a href=""><h1>Обмін_валют.кпі</h1></a></div>
         <div class="right">
             <div class="button">
-                <a href="/LoginPage"> <input type="submit" value="Log in"></a>
+                <a href="/login"> <input type="submit" value="Log in"></a>
+            </div>
+            <div class="button">
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out"/>
+                </form>
             </div>
         </div>
     </div>

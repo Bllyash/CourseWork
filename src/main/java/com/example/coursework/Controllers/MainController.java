@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+//ЗРОБЛЕНО БЛЛЯШОМ, ЩОБ НЕ ВИЛЕТІТИ З КПІ
 @Controller
 public class MainController {
     @Autowired
@@ -35,10 +34,7 @@ public class MainController {
         return "MoneyAdd";
     }
 
-    @GetMapping("/LoginPage")
-    public String LoginPage(Model model){
-        return "LoginPage";
-    }
+
 
     @GetMapping("/MoneyValuePage/{id}")
     public String MoneyValuePage(@PathVariable(value = "id") long id, Model model ){
@@ -53,12 +49,25 @@ public class MainController {
 
     @PostMapping("/MoneyCourse/add")
     public String MoneyExchangeAdd(@RequestParam String moneyName, @RequestParam String DollarCurrency, Model model){
+        //ДАТА
         LocalDate time = LocalDate.now();
         double DollarCurrencyDouble = Double.parseDouble(DollarCurrency);
         Currency currency = new Currency(moneyName, DollarCurrencyDouble);
         currencyRepository.save(currency);
         CurrencyHistory currencyHistory = new CurrencyHistory(moneyName, DollarCurrencyDouble, time);
         currencyHistoryRepository.save(currencyHistory);
+        CurrencyHistory currencyHistoryDates = new CurrencyHistory();
+        for(int i = 1; ; i++){
+            currencyHistoryDates.setDate(time.minusDays(i));
+            currencyHistoryDates.setRate(DollarCurrencyDouble);
+            currencyHistoryDates.setCurrencyCode(moneyName);
+            if(Objects.equals(currencyHistoryDates.getDate(), LocalDate.of(2023, 05, 9))){
+                break;
+            }
+            currencyHistoryRepository.save(currencyHistoryDates);
+            currencyHistoryDates = new CurrencyHistory();
+
+        }
         return "redirect:/";
     }
     @GetMapping("/MoneyValuePage/{id}/edit")
@@ -73,21 +82,22 @@ public class MainController {
     }
     @PostMapping("/MoneyValuePage/{id}/edit")
     public String MoneyExchangeEdit(@RequestParam String moneyName,@RequestParam String DollarCurrency, Model model, @PathVariable(value = "id") long id) {
+        LocalDate time = LocalDate.now();
         Currency currency = currencyRepository.findById(id).orElseThrow();
         currency.setName(moneyName);
         currency.setCurrentDollarCurrency(Double.parseDouble(DollarCurrency));
         currencyRepository.save(currency);
         Optional<Currency> currencyOpt = currencyRepository.findById(id);
-        if (currencyOpt.isPresent()) {
-            LocalDate time = LocalDate.now();
-            currency = currencyOpt.get();
-            // Створення нового запису в таблиці з історією курсу цієї валюти
+        Optional<CurrencyHistory> currencyHistoryOpt = currencyHistoryRepository.findByCurrencyCodeAndDate(currency.getName(), time);
+        if (currencyHistoryOpt.isPresent()) {
+            CurrencyHistory currencyHistory = currencyHistoryOpt.get();
+            currencyHistory.setRate(Double.parseDouble(DollarCurrency));
+            currencyHistoryRepository.save(currencyHistory);
+        } else {
             CurrencyHistory currencyHistory = new CurrencyHistory();
-            currencyHistory.setId(currency.getId());
             currencyHistory.setCurrencyCode(currency.getName());
             currencyHistory.setRate(Double.parseDouble(DollarCurrency));
             currencyHistory.setDate(time);
-            // Додавання нового запису до таблиці з історією курсу цієї валюти
             currencyHistoryRepository.save(currencyHistory);
         }
         return "redirect:/";
@@ -105,11 +115,14 @@ public class MainController {
     public String MoneyExchangeHistory(Model model, @PathVariable Long id){
         Currency currency = currencyRepository.findById(id).orElseThrow();
         List<CurrencyHistory> filteredData = currencyHistoryRepository.findByCurrencyCode(currency.getName());
-        System.out.println(filteredData);
+        String currencyName = currency.getName();
+        Iterable<Currency> curs = currencyRepository.findAll();
+        Iterable<CurrencyHistory> cursHist = currencyHistoryRepository.findAll();
+        filteredData.sort(Comparator.comparing(CurrencyHistory::getDate));
+        model.addAttribute("cursName", currencyName);
+        model.addAttribute("otherValues", curs);
+        model.addAttribute("otherValuesHist", cursHist);
         model.addAttribute("filteredData", filteredData);
         return "MoneyExchangeHistory";
     }
-
 }
-
-
